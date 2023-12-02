@@ -30,25 +30,29 @@ class DBWrapper:
             self.__connection = None
             self.__cursor = None
 
-    def query(self, procedure, params=None, fetch_mode = "all"):
+    def query(self, sql, params=None, is_procedure= True, fetch_mode = "all"):
 
         if self.__connection:
 
             try:
 
-                self.__cursor.callproc(procedure, params)
+                data = {} if fetch_mode == 'one' else []
 
-                data = []
+                if(is_procedure):
 
-                for result in self.__cursor.stored_results():
-                    
-                    if fetch_mode == 'one':
-                        data = result.fetchone()
+                    self.__cursor.callproc(sql, params)
 
-                    else:
-                        data = result.fetchall()
+                    for result in self.__cursor.stored_results():
+                        
+                        data = result.fetchone() if fetch_mode == 'one' else result.fetchall()
 
-                return data
+                else:
+
+                    self.__cursor.execute(sql, params)
+
+                    data = self.__cursor.fetchone() if fetch_mode == 'one' else self.__cursor.fetchall()
+
+                return data if data else []
 
             except mysql.connector.Error as e:
 
@@ -59,13 +63,13 @@ class DBWrapper:
 
             return None
 
-    def manipulate(self, procedure, params=None):
+    def manipulate(self, sql, params=None):
 
         if self.__connection:
 
             try:
 
-                self.__cursor.callproc(procedure, params)
+                self.__cursor.callproc(sql, params)
                 self.__connection.commit()
 
                 return self.__cursor.rowcount

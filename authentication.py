@@ -12,7 +12,7 @@ def Authentication(func):
 
         if "Authorization" in request.headers:
 
-            token = request.headers["Authorization"].split(" ")[1]
+            token = request.headers["Authorization"]
 
         else:
 
@@ -24,7 +24,7 @@ def Authentication(func):
 
         try:
 
-            decoded_token = jwt.decode(token, os.environ["SECRET_KEY"], algorithms=["HS256"])
+            decoded_token = jwt.decode(token, os.getenv("TOKEN_SECRET_KEY"), algorithms=["HS256"])
 
             if(decoded_token["expiration"] < str(datetime.utcnow())):
 

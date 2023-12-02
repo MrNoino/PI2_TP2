@@ -1,12 +1,23 @@
 // URL base da API
 @apiurl = http://127.0.0.1:5000
-@auth-token = 510c11079370570dadf2dc949927abcf
+@auth-token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZXhwaXJhdGlvbiI6IjIwMjQtMDEtMDYgMDQ6MTg6MzMuOTIwMjAzIn0.OllIXp4pr47L41hWVUf1HpxeYIUNSyCTVFpCTrk6Ejc
 
 ### Rota inicial - mensagem de boas vindas
 GET {{apiurl}}/ HTTP/1.1
 
 ### Uma rota que não existe - devolverá 404 Not Found
 GET {{apiurl}}/test HTTP/1.1
+
+### Registo de novo utilizador - POST (dados em JSON) - resultado JSON
+POST {{apiurl}}/api/users/ HTTP/1.1
+Content-Type: application/json
+
+{ 
+    "name" : "Joacine Moreira",
+    "email" : "joacine@gmail.com",
+    "password" : "joacine",
+    "phone_number": "961273656"
+}
 
 ### Rota de login do user bem sucedida
 PATCH {{apiurl}}/api/users/ HTTP/1.1
@@ -25,20 +36,50 @@ Content-Type: application/json
     "email": "abc"
 }
 
-### Registo de novo utilizador - POST (dados em JSON) - resultado JSON
-POST {{apiurl}}/api/users/ HTTP/1.1
+### Obter entidades ativas
+GET {{apiurl}}/api/entities/ HTTP/1.1
+Authorization : {{auth-token}}
+Content-Type: application/json
+
+### Obter detalhes de uma entidade
+GET {{apiurl}}/api/entities/1/ HTTP/1.1
+Authorization : {{auth-token}}
+Content-Type: application/json
+
+### Obter lista de entidades ativas e com ofertas para aquele dia
+GET {{apiurl}}/api/entities/withoffers/ HTTP/1.1
+Authorization : {{auth-token}}
+Content-Type: application/json
+
+### Obter lista de todas as ofertas ainda disponíveis para aquele dia
+GET {{apiurl}}/api/entities/offers/ HTTP/1.1
+Authorization : {{auth-token}}
+Content-Type: application/json
+
+### Obter lista de ofertas ainda disponíveis de uma entidade para aquele dia
+GET {{apiurl}}/api/entities/offers/1/ HTTP/1.1
+Authorization : {{auth-token}}
+Content-Type: application/json
+
+### Registar a compra de uma oferta
+POST {{apiurl}}/api/entities/offers/buy/ HTTP/1.1
+Authorization : {{auth-token}}
 Content-Type: application/json
 
 { 
-    "name" : "Joacine Moreira",
-    "email" : "joacine@gmail.com",
-    "password" : "joacine",
-    "phone_number": "961273656"
+    "offer_id" : "1"
 }
 
-### Exemplo de uma rota protegida e que necessite de um token válido
-### Neste caso é para obter a lista de carros do utilizador com um 
-### determinado token que é passado no header Authorization
-
-GET {{apiurl}}/cars/ HTTP/1.1
+### Obter lista compras efetuadas pelo utilizador
+GET {{apiurl}}/api/users/purchases/ HTTP/1.1
 Authorization : {{auth-token}}
+Content-Type: application/json
+
+### Cancelar uma compra
+PATCH {{apiurl}}/api/users/purchases/ HTTP/1.1
+Authorization : {{auth-token}}
+Content-Type: application/json
+
+{
+    "purchase_id": ""
+}
