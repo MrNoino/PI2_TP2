@@ -1,14 +1,12 @@
 import os, http_codes, jwt, bcrypt, env
 from flask import Flask, jsonify, request
 from lib.model.DBWrapper import DBWrapper
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 from authentication import Authentication
 
 app = Flask(__name__)
 
 app.config['JSON_AS_ASCII'] = False
-
-# -*- coding: utf-8 -*-
 
 # !!! START !!!
 @app.route("/")
@@ -238,9 +236,9 @@ def purchases():
     db_wrapper = DBWrapper()
     db_wrapper.connect()
 
-    if request.method == 'GET':
+    decoded_token = jwt.decode(request.headers["Authorization"], os.getenv("TOKEN_SECRET_KEY"), algorithms=["HS256"])
 
-        decoded_token = jwt.decode(request.headers["Authorization"], os.getenv("TOKEN_SECRET_KEY"), algorithms=["HS256"])
+    if request.method == 'GET':
 
         procedure = '''get_purchases'''
 
@@ -278,7 +276,7 @@ def purchases():
             
         parameters = request.get_json()
 
-        received_parameters = ['purchase_id']
+        received_parameters = ['offer_id']
 
         if not all(parameter in parameters for parameter in received_parameters):
 
@@ -286,17 +284,47 @@ def purchases():
         
         procedure = '''get_purchase'''
 
-        purchase = db_wrapper.query(procedure, [parameters['purchase_id']], fetch_mode= 'one')
+        purchase = db_wrapper.query(procedure, [parameters['offer_id'], decoded_token["id"]], decoded_token["id"], fetch_mode= 'one')
+
+        if purchase is not None:
+
+            if not purchase:
+
+                return jsonify({'message': 'Compra não encontrada'}), http_codes.NOT_FOUND
+
+        else: 
+
+            return jsonify({'message': 'Erro no servidor'}), http_codes.INTERNAL_SERVER_ERROR
 
         procedure = '''get_offer'''
 
-        offer = db_wrapper.query(procedure, [purchase['offer_id']], fetch_mode= 'one')
+        offer = db_wrapper.query(procedure, [parameters['offer_id']], fetch_mode= 'one')
 
-        if offer['date'].date() != datetime.today().date():
+        if offer is not None:
+
+            if not offer:
+
+                return jsonify({'message': 'Oferta não encontrada'}), http_codes.NOT_FOUND
+
+        else: 
+
+            return jsonify({'message': 'Erro no servidor'}), http_codes.INTERNAL_SERVER_ERROR
+
+        if offer['date'] != date.today():
             
             return jsonify({'message': 'Data da oferta expirada'}), http_codes.FORBIDDEN
+        
+        procedure = '''cancel_purchase'''
+        
+        inserted = db_wrapper.manipulate(procedure, [parameters['offer_id'], decoded_token["id"]])
 
-        return http_codes.OK
+        if inserted:
+
+            return jsonify({'message': 'Compra cancelada com sucesso'}), http_codes.OK
+        
+        else:
+
+            return jsonify({'message': 'Compra não cancelada'}), http_codes.INTERNAL_SERVER_ERROR
 
 
 if __name__ == "__main__":

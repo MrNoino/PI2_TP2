@@ -67,7 +67,7 @@ Authorization : {{auth-token}}
 Content-Type: application/json
 
 { 
-    "offer_id" : "1"
+    "offer_id" : "2"
 }
 
 ### Obter lista compras efetuadas pelo utilizador
@@ -81,5 +81,5 @@ Authorization : {{auth-token}}
 Content-Type: application/json
 
 {
-    "purchase_id": ""
+    "offer_id": "2"
 }
