@@ -1,6 +1,6 @@
-import os, http_codes, jwt, bcrypt, env
+import os, http_codes, jwt, bcrypt
 from flask import Flask, jsonify, request
-from lib.model.DBWrapper import DBWrapper
+from lib.DBWrapper import DBWrapper
 from datetime import datetime, date, timedelta
 from authentication import Authentication
 
@@ -83,8 +83,6 @@ def login():
 
         is_active = db_wrapper.query(procedure, [user["id"]], fetch_mode= 'one')
 
-        db_wrapper.close()
-
         if is_active and not is_active["active"]:
 
             return jsonify({'message': "Cliente inativo"}), http_codes.UNAUTHORIZED
@@ -93,6 +91,16 @@ def login():
                     'id': user["id"],
                     'expiration': str(datetime.utcnow() + timedelta(weeks=5))
                 }, os.getenv("TOKEN_SECRET_KEY"))
+
+        procedure = '''update_token'''
+
+        updated = db_wrapper.manipulate(procedure, [user["id"], token])
+
+        db_wrapper.close()
+
+        if not updated:
+
+            return jsonify({'message': updated}), http_codes.INTERNAL_SERVER_ERROR
 
         return jsonify({'token': str(token)}), http_codes.OK
     
@@ -103,6 +111,28 @@ def login():
     else:
 
         return jsonify({'message': 'Erro no servidor'}), http_codes.INTERNAL_SERVER_ERROR
+
+# !!! LOGOUT !!!
+@app.patch("/api/users/logout/")
+@Authentication
+def logout():
+
+    decoded_token = jwt.decode(request.headers["Authorization"], os.getenv("TOKEN_SECRET_KEY"), algorithms=["HS256"])
+
+    procedure = '''update_token'''
+
+    db_wrapper = DBWrapper()
+    db_wrapper.connect()
+
+    updated = db_wrapper.manipulate(procedure, [decoded_token["id"], None])
+
+    db_wrapper.close()
+
+    if not updated:
+
+        return jsonify({'message': 'Erro no servidor'}), http_codes.INTERNAL_SERVER_ERROR
+    
+    return jsonify({'message': 'Sessão terminada com sucesso'}), http_codes.OK
 
 # !!! ENTITIES !!!
 @app.get("/api/entities/")
@@ -145,7 +175,40 @@ def entities(entity_id = None):
 @Authentication
 def entities_withoffers():
 
-    return http_codes.OK
+    db_wrapper = DBWrapper()
+    db_wrapper.connect()
+
+    sql = '''SELECT * FROM get_active_entities'''
+
+    entities = db_wrapper.query(sql, is_procedure=False, fetch_mode= "all")
+
+
+    if entities is None:
+
+        return jsonify({'message': 'Erro no servidor'}), http_codes.INTERNAL_SERVER_ERROR
+
+
+    procedure = '''get_today_offers_by_entity'''
+
+    for key, entity in enumerate(entities):
+
+        offers = db_wrapper.query(procedure, [entity["id"]], fetch_mode= "all")
+
+        if not offers:
+
+            entities.pop(key)
+
+        else:
+
+            entities[key]["offers"] = offers
+
+    db_wrapper.close()
+
+    if not entities:
+
+        return jsonify({'message': 'Nenhuma entidade com ofertas encontrada'}), http_codes.NOT_FOUND
+
+    return jsonify(entities), http_codes.OK
 
 # !!! OFFERS OF THE ENTITIES !!!
 @app.get("/api/entities/offers/")
@@ -158,13 +221,27 @@ def entities_offers(entity_id = None):
 
     if entity_id:
 
-        procedure = '''get_offers_for_today'''
+        procedure = '''get_today_offers_by_entity'''
 
         data = db_wrapper.query(procedure, [entity_id], fetch_mode= "all")
 
     else:
 
-        return http_codes.OK
+        sql = '''SELECT * FROM get_today_offers'''
+
+        data = db_wrapper.query(sql, is_procedure=False, fetch_mode= "all")
+
+        if data is None:
+
+            return jsonify({'message': 'Erro no servidor'}), http_codes.INTERNAL_SERVER_ERROR
+
+        procedure = '''get_entity'''
+
+        for key, offer in enumerate(data):
+
+            entity = db_wrapper.query(procedure, [offer["entity_id"]], fetch_mode= "one")
+
+            data[key]["entity"] = entity
     
     db_wrapper.close()
 
@@ -329,4 +406,3 @@ def purchases():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
