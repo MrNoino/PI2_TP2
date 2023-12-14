@@ -106,7 +106,7 @@ def login():
     
     elif user is not None or not bcrypt.checkpw(parameters["password"].encode('utf8'), user["password"]):
 
-        return jsonify({'message': 'Credênciais inválidas'}), http_codes.NOT_FOUND
+        return jsonify({'message': 'Credênciais inválidas'}), http_codes.UNAUTHORIZED
 
     else:
 
@@ -168,7 +168,6 @@ def entities(entity_id = None):
     else:
 
         return jsonify({'message': 'Erro no servidor'}), http_codes.INTERNAL_SERVER_ERROR
-
 
 # !!! ENTITIES WITH OFFERS !!!
 @app.get("/api/entities/withoffers/")
@@ -282,14 +281,28 @@ def buy_offer():
     if not all(parameter in parameters for parameter in received_parameters):
 
         return jsonify({'message': 'Pedido mal formado'}), http_codes.BAD_REQUEST
+    
+    procedure = '''get_offer'''
 
-    procedure = '''is_offer_available'''
+    offer = db_wrapper.query(procedure, [parameters['offer_id']], fetch_mode= 'one')
 
-    is_offer_available = db_wrapper.query(procedure, [parameters["offer_id"]], fetch_mode= 'one')
+    if offer is not None:
 
-    if is_offer_available and not is_offer_available["available"]:
+        if not offer:
 
+            return jsonify({'message': 'Oferta não encontrada'}), http_codes.NOT_FOUND
+
+    else: 
+
+        return jsonify({'message': 'Erro no servidor'}), http_codes.INTERNAL_SERVER_ERROR
+    
+    if not offer['available']:
+        
         return jsonify({'message': "Oferta indisponível"}), http_codes.UNAUTHORIZED
+
+    if offer['date'] != date.today():
+        
+        return jsonify({'message': 'Data da oferta expirada'}), http_codes.FORBIDDEN
 
     procedure = '''buy_offer'''
 

@@ -1,57 +1,31 @@
 // URL base da API
 @apiurl = http://127.0.0.1:5000
-@auth-token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZXhwaXJhdGlvbiI6IjIwMjQtMDEtMTYgMjM6MjU6MTEuODc0NTg4In0._JEfjCgQz1vddOvKPrjtyewlwZV318XkX_i7rQVq2Yw
+@auth-token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZXhwaXJhdGlvbiI6IjIwMjQtMDEtMTcgMjI6MTY6MjYuMjczMTMyIn0.0-ZfH0fD81SrKU1M8z6VxN3ho-Z0oTCqjpcEI3HWQtE
 
-### Rota inicial - mensagem de boas vindas
-GET {{apiurl}}/ HTTP/1.1
-
-### Uma rota que não existe - devolverá 404 Not Found
-GET {{apiurl}}/test HTTP/1.1
-
-### Registo de novo utilizador - POST (dados em JSON) - resultado JSON
+### Inserir novo cliente
 POST {{apiurl}}/api/users/ HTTP/1.1
 Content-Type: application/json
 
 { 
-    "name" : "Joacine Moreira",
-    "email" : "joacine@gmail.com",
-    "password" : "joacine",
-    "phone_number": "961273656"
+    "name" : "Nuno Lopes",
+    "email" : "nuno@gmail.com",
+    "password" : "nuno",
+    "phone_number": "913456773"
 }
 
-### Novo registo de novo utilizador com email já existente
-POST {{apiurl}}/api/users/ HTTP/1.1
-Content-Type: application/json
-
-{ 
-    "name" : "Joacine Moreira",
-    "email" : "joacine@gmail.com",
-    "password" : "joacine",
-    "phone_number": "961273656"
-}
-
-### Rota de login do user bem sucedida
+### Autenticar cliente
 PATCH {{apiurl}}/api/users/ HTTP/1.1
 Content-Type: application/json
 
 { 
-    "email": "nunosantoslopes@hotmail.com",
-    "password": "nuno"
+    "email": "nuno@gmail.com",
+    "password": ""
 }
 
-### Rota de logout do user
+### Terminar sessão do cliente
 PATCH {{apiurl}}/api/users/logout/ HTTP/1.1
 Authorization : {{auth-token}}
 Content-Type: application/json
-
-### Rota de login do user incorreta
-PATCH {{apiurl}}/api/users/ HTTP/1.1
-Content-Type: application/json
-
-{ 
-    "email": "abc",
-    "password": "abc"
-}
 
 ### Obter entidades ativas
 GET {{apiurl}}/api/entities/ HTTP/1.1
@@ -60,11 +34,6 @@ Content-Type: application/json
 
 ### Obter detalhes de uma entidade
 GET {{apiurl}}/api/entities/1/ HTTP/1.1
-Authorization : {{auth-token}}
-Content-Type: application/json
-
-### Obter detalhes de uma entidade não existente
-GET {{apiurl}}/api/entities/0/ HTTP/1.1
 Authorization : {{auth-token}}
 Content-Type: application/json
 
@@ -83,27 +52,13 @@ GET {{apiurl}}/api/entities/offers/1/ HTTP/1.1
 Authorization : {{auth-token}}
 Content-Type: application/json
 
-### Obter lista de ofertas ainda disponíveis de uma entidade não existente para aquele dia
-GET {{apiurl}}/api/entities/offers/0/ HTTP/1.1
-Authorization : {{auth-token}}
-Content-Type: application/json
-
 ### Registar a compra de uma oferta
 POST {{apiurl}}/api/entities/offers/buy/ HTTP/1.1
 Authorization : {{auth-token}}
 Content-Type: application/json
 
 { 
-    "offer_id" : "2"
-}
-
-### Registar a compra de uma oferta não existente
-POST {{apiurl}}/api/entities/offers/buy/ HTTP/1.1
-Authorization : {{auth-token}}
-Content-Type: application/json
-
-{ 
-    "offer_id" : "0"
+    "offer_id" : "6"
 }
 
 ### Obter lista compras efetuadas pelo utilizador
@@ -117,5 +72,5 @@ Authorization : {{auth-token}}
 Content-Type: application/json
 
 {
-    "offer_id": "2"
+    "offer_id": "6"
 }
