@@ -1,6 +1,6 @@
 # PI 2 - PW 2 - Web Platform to Combat Food Waste: FoodSaver (EN)
 
-This is the pratical work nº2 at the subject Programming for Internet 2. The theme for this project in general is to develop a Web platform to combat food waste. In this case at the TW 2 the main goal is to create an API to make available features to the plataform users. 
+This is the pratical work nº2 at the subject Programming for Internet 2. The theme for this project in general is to develop a Web platform to combat food waste. In this case at the TW 2 the main goal is to create an API to make available features to the users plataform. 
 
 ## Prerequisites
 
