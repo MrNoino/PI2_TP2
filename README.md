@@ -26,6 +26,7 @@ This is the pratical work nº2 at the subject Programming for Internet 2. The th
 # PI 2 - TP 2 - Plataforma Web de Combate ao Desperdício Alimentar: FoodSaver (PT)
 
 Este é o trabalho prático nº2 na cadeira de Programação para a Internet 2. O tema do projeto em geral é desenvolver uma plataforma Web de combate ao desperdicio alimentar. No caso do TP 2 o objetivo é criar uma API para disponibilizar funcionalidades para os clientes da plataforma.
+
 ## Pré Requisitos
 
 * MySQL Server 8
