@@ -16,7 +16,7 @@ This is the pratical work nº2 at the subject Programming for Internet 2. The th
 4.  Install Python 3 and pip from oficial sources;
 5.  Install the venv package with the following command: <code>pip install venv</code>;
 6.  Create a virtual environment in the root project folder with the following command: <code>python -m venv venv</code>;
-7.  Navegate to /venv/Scripts/ and execute the activate.bat file to activate the virtual environment;
+7.  Navigate to /venv/Scripts/ and execute the activate.bat file to activate the virtual environment;
 8.  Navegate to the root project folder and install all dependencies of the project with the following command: <code>py -m pip install -r requirements.txt</code>;
 9.  Diactivate the virtual environment in /venv/Scripts/diactivate.bat;
 10. Execute the API from the root project folder with the command: <code>python app.py</code>.
