@@ -1,3 +1,4 @@
+DROP PROCEDURE IF EXISTS `foodsaver`.`insert_admin` ;
 DELIMITER $$
 CREATE PROCEDURE insert_admin(IN a_username VARCHAR(45), IN a_nome VARCHAR(100), IN a_password VARCHAR(200))
 BEGIN
@@ -7,6 +8,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`admin_login` ;
 DELIMITER $$
 CREATE PROCEDURE admin_login(IN a_username VARCHAR(45)) 
 BEGIN
@@ -16,6 +18,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`get_admin` ;
 DELIMITER $$
 CREATE PROCEDURE get_admin(IN a_id INT)
 BEGIN
@@ -25,6 +28,7 @@ WHERE id = a_id;
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`update_admin_password` ;
 DELIMITER $$
 CREATE PROCEDURE update_admin_password(IN a_id VARCHAR(45), IN a_password VARCHAR(200))
 BEGIN
@@ -35,6 +39,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`insert_entity` ;
 DELIMITER $$
 CREATE PROCEDURE insert_entity(IN a_nome VARCHAR(45), IN a_descricao VARCHAR(256), IN a_logotipo VARCHAR(100), IN a_morada VARCHAR(200), IN a_telefone VARCHAR(45), IN a_email VARCHAR(150),  IN a_password VARCHAR(200), IN a_ativo TINYINT(1))
 BEGIN
@@ -44,6 +49,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`get_entity` ;
 DELIMITER $$
 CREATE PROCEDURE get_entity(IN a_id INT)
 BEGIN
@@ -53,6 +59,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`entity_login` ;
 DELIMITER $$
 CREATE PROCEDURE entity_login(IN a_email VARCHAR(150)) 
 BEGIN
@@ -62,6 +69,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`update_entity` ;
 DELIMITER $$
 CREATE PROCEDURE update_entity(IN a_id INT, IN a_nome VARCHAR(45), IN a_descricao VARCHAR(256), IN a_logotipo VARCHAR(100), IN a_morada VARCHAR(200), IN a_telefone VARCHAR(45), IN a_email VARCHAR(150), IN a_ativo TINYINT(1))
 BEGIN
@@ -78,6 +86,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`insert_offer` ;
 DELIMITER $$
 CREATE PROCEDURE insert_offer(IN a_entidade_id INT, IN a_nome VARCHAR(45), IN a_descricao VARCHAR(256), IN a_foto VARCHAR(100), IN a_preço FLOAT, IN a_data DATE, IN a_disponivel TINYINT(1))
 BEGIN
@@ -87,6 +96,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`delete_offer` ;
 DELIMITER $$
 CREATE PROCEDURE delete_offer(IN a_id INT)
 BEGIN
@@ -95,6 +105,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`get_offers` ;
 DELIMITER $$
 CREATE PROCEDURE get_offers(IN a_entidade_id INT)
 BEGIN
@@ -104,6 +115,7 @@ WHERE entidade_id = a_entidade_id;
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`update_offer` ;
 DELIMITER $$
 CREATE PROCEDURE update_offer(IN a_id INT, IN a_entidade_id INT, IN a_nome VARCHAR(45), IN a_descricao VARCHAR(256), IN a_foto VARCHAR(100), IN a_preço FLOAT, IN a_data DATE, IN a_disponivel TINYINT(1))
 BEGIN
@@ -119,6 +131,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`get_today_offers_by_entity` ;
 DELIMITER $$
 CREATE PROCEDURE get_today_offers_by_entity(IN a_entidade_id INT)
 BEGIN
@@ -128,6 +141,7 @@ WHERE entidade_id = a_entidade_id and data = CURDATE() and disponivel = 1;
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`buy_offer` ;
 DELIMITER $$
 CREATE PROCEDURE buy_offer(IN a_oferta_id INT, IN a_cliente_id INT, IN a_pago TINYINT(1), IN a_levantado TINYINT(1), IN a_ativo TINYINT(1))
 BEGIN
@@ -149,6 +163,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`get_offer` ;
 DELIMITER $$
 CREATE PROCEDURE get_offer(IN a_id INT)
 BEGIN
@@ -158,6 +173,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`exists_user_email` ;
 DELIMITER $$
 CREATE PROCEDURE exists_user_email(IN a_email VARCHAR(100))
 BEGIN
@@ -167,6 +183,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`insert_user` ;
 DELIMITER $$
 CREATE PROCEDURE insert_user(IN a_nome VARCHAR(45), IN a_email VARCHAR(100),  IN a_password VARCHAR(200), IN a_telefone VARCHAR(45), IN a_ativo TINYINT(1))
 BEGIN
@@ -176,6 +193,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`user_login` ;
 DELIMITER $$
 CREATE PROCEDURE user_login(IN a_email VARCHAR(100)) 
 BEGIN
@@ -185,6 +203,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`is_user_active` ;
 DELIMITER $$
 CREATE PROCEDURE is_user_active(IN a_id INT) 
 BEGIN
@@ -194,6 +213,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`get_purchases` ;
 DELIMITER $$
 CREATE PROCEDURE get_purchases(IN a_cliente_id INT) 
 BEGIN
@@ -204,6 +224,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`get_purchase` ;
 DELIMITER $$
 CREATE PROCEDURE get_purchase(IN a_oferta_id INT, IN a_cliente_id INT) 
 BEGIN
@@ -213,6 +234,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`cancel_purchase` ;
 DELIMITER $$
 CREATE PROCEDURE cancel_purchase(IN a_oferta_id INT, IN a_cliente_id INT) 
 c_p:BEGIN
@@ -232,6 +254,7 @@ c_p:BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `foodsaver`.`update_token` ;
 DELIMITER $$
 CREATE PROCEDURE update_token(IN a_id INT, IN a_token VARCHAR(200))
 BEGIN
@@ -242,7 +265,7 @@ BEGIN
 END $$
 DELIMITER ;
 
-
+DROP PROCEDURE IF EXISTS `foodsaver`.`check_token` ;
 DELIMITER $$
 CREATE PROCEDURE check_token(IN a_token VARCHAR(200))
 BEGIN

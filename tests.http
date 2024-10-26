@@ -1,6 +1,6 @@
 // URL base da API
 @apiurl = http://127.0.0.1:5000
-@auth-token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZXhwaXJhdGlvbiI6IjIwMjQtMDItMDMgMTY6NDU6MTcuNDQ5NjIyIn0.6fF2f6LtmdMA0rp5DzZrDpCyOgm0cVrNpQP4WKlb6Zs
+@auth-token = 
 
 ### Inserir novo cliente
 POST {{apiurl}}/api/users/ HTTP/1.1
