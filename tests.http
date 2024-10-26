@@ -1,16 +1,16 @@
 // URL base da API
 @apiurl = http://127.0.0.1:5000
-@auth-token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZXhwaXJhdGlvbiI6IjIwMjQtMDEtMTcgMjI6MTY6MjYuMjczMTMyIn0.0-ZfH0fD81SrKU1M8z6VxN3ho-Z0oTCqjpcEI3HWQtE
+@auth-token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZXhwaXJhdGlvbiI6IjIwMjQtMDItMDMgMTY6NDU6MTcuNDQ5NjIyIn0.6fF2f6LtmdMA0rp5DzZrDpCyOgm0cVrNpQP4WKlb6Zs
 
 ### Inserir novo cliente
 POST {{apiurl}}/api/users/ HTTP/1.1
 Content-Type: application/json
 
 { 
-    "name" : "Nuno Lopes",
-    "email" : "nuno@gmail.com",
-    "password" : "nuno",
-    "phone_number": "913456773"
+    "name" : "example",
+    "email" : "example@mail.com",
+    "password" : "pwd",
+    "phone_number": "912345678"
 }
 
 ### Autenticar cliente
@@ -18,8 +18,8 @@ PATCH {{apiurl}}/api/users/ HTTP/1.1
 Content-Type: application/json
 
 { 
-    "email": "nuno@gmail.com",
-    "password": ""
+    "email": "example@mail.com",
+    "password": "pwd"
 }
 
 ### Terminar sessão do cliente
@@ -52,6 +52,11 @@ GET {{apiurl}}/api/entities/offers/1/ HTTP/1.1
 Authorization : {{auth-token}}
 Content-Type: application/json
 
+### Obter uma oferta
+GET {{apiurl}}/api/offers/9/ HTTP/1.1
+Authorization : {{auth-token}}
+Content-Type: application/json
+
 ### Registar a compra de uma oferta
 POST {{apiurl}}/api/entities/offers/buy/ HTTP/1.1
 Authorization : {{auth-token}}
@@ -72,5 +77,5 @@ Authorization : {{auth-token}}
 Content-Type: application/json
 
 {
-    "offer_id": "6"
+    "offer_id": "10"
 }
